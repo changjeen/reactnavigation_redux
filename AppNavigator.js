@@ -1,13 +1,14 @@
 import React from 'react';
-import {createStackNavigator, createBottomTabNavigator} from "react-navigation";
+import {createStackNavigator, createBottomTabNavigator,createAppContainer, createSwitchNavigator, } from "react-navigation";
 import HomeScreen from "./HomeScreen";
 import DetailScreen from "./DetailScreen";
 import SettingScreen from './SettingScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Text, View} from "react-native";
+import {LoginScreen, AuthLoadingScreen} from './Login'
 
 
-export class IconWithBadge extends React.Component {
+class IconWithBadge extends React.Component {
     render() {
         const { name, badgeCount, color, size } = this.props;
         return (
@@ -38,12 +39,12 @@ export class IconWithBadge extends React.Component {
     }
 }
 
-export const HomeIconWithBadge = props => {
+const HomeIconWithBadge = props => {
     // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
     return <IconWithBadge {...props} badgeCount={3} />;
 };
 
-export const getTabBarIcon = (navigation, focused, tintColor) => {
+const getTabBarIcon = (navigation, focused, tintColor) => {
     const { routeName } = navigation.state;
     let IconComponent = Ionicons;
     let iconName;
@@ -104,8 +105,9 @@ const SettingsStack = createStackNavigator(
     }
 );
 
+const AuthStack = createStackNavigator({Login: LoginScreen});
 
-export const AppNavigator = createBottomTabNavigator(
+const TabNavigator = createBottomTabNavigator(
     {
         Home: HomeStack,
         Settings: SettingsStack,
@@ -122,3 +124,15 @@ export const AppNavigator = createBottomTabNavigator(
         },
     }
 );
+
+export default createAppContainer(createSwitchNavigator(
+    {
+        AuthLoading: AuthLoadingScreen,
+        App: TabNavigator,
+        Auth: AuthStack,
+    },
+    {
+        initialRouteName: 'AuthLoading'
+    }
+)
+)

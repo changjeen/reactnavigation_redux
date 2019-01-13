@@ -12,7 +12,7 @@ import {
 import { Provider, connect } from 'react-redux';
 
 
-import {AppNavigator} from './AppNavigator'
+import AppNavigator from './AppNavigator'
 import MainReducer from './src/reducers/MainReducer'
 
 

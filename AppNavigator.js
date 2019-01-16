@@ -6,6 +6,7 @@ import SettingScreen from './SettingScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Text, View} from "react-native";
 import {LoginScreen, AuthLoadingScreen} from './Login'
+import BadInstagramCloneApp from './BadInstagramCloneApp'
 
 
 class IconWithBadge extends React.Component {
@@ -55,6 +56,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     } else if (routeName === 'Settings') {
         // iconName = `ios-settings${focused ? '' : '-outline'}`;
         iconName = 'ios-settings';
+    } else if ( routeName === 'Camera'){
+        iconName = 'ios-camera';
     }
 
     // You can return any component that you like here!
@@ -105,11 +108,18 @@ const SettingsStack = createStackNavigator(
     }
 );
 
+// const CameraStack = createStackNavigator(
+//     {
+//         Camera: BadInstagramCloneApp,
+//     }
+// )
+
 const AuthStack = createStackNavigator({Login: LoginScreen});
 
 const TabNavigator = createBottomTabNavigator(
     {
         Home: HomeStack,
+        Camera : BadInstagramCloneApp,
         Settings: SettingsStack,
     },
     {

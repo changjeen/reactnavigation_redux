@@ -37,16 +37,26 @@ class HomeScreen extends React.Component {
         });
     }
 
+    renderRow(data) {
+        return (
+            <ListItem
+                onPress={() => this.props.navigation.navigate("Details", {
+                    id : data.id,
+                })}
+            >
+                <Text>{ data.title }</Text>
+            </ListItem>
+        )
+    }
+
     render() {
 
         return (
             <Container>
                 <Content>
                     <List dataArray={this.state.dataSource}
-                          renderRow={(item) =>
-                              <ListItem>
-                                  <Text>{item.title}</Text>
-                              </ListItem>
+                          renderRow={
+                              data => this.renderRow(data)
                           }>
                     </List>
                 </Content>

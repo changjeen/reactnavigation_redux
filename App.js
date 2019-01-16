@@ -10,6 +10,7 @@ import {
   createNavigationReducer,
 } from 'react-navigation-redux-helpers';
 import { Provider, connect } from 'react-redux';
+import { createLogger} from "redux-logger";
 
 
 import AppNavigator from './AppNavigator'
@@ -35,10 +36,13 @@ const mapStateToProps = (state) => ({
 });
 const AppWithNavigationState = connect(mapStateToProps)(App);
 
+const logger = createLogger();
+
+
 const store = createStore(
     appReducer,
-    applyMiddleware(middleware),
-);
+    applyMiddleware(middleware,logger),
+)
 
 export default class Root extends React.Component {
   render() {

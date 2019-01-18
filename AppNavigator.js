@@ -5,9 +5,9 @@ import DetailScreen from "./DetailScreen";
 import SettingScreen from './SettingScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Text, View} from "react-native";
-import {LoginScreen, AuthLoadingScreen} from './Login'
-import BadInstagramCloneApp from './BadInstagramCloneApp'
-
+import {LoginScreen, AuthLoadingScreen} from './Login';
+import BadInstagramCloneApp from './BadInstagramCloneApp';
+import ProductScanRNCamera from './ProductScanRNCamera';
 
 class IconWithBadge extends React.Component {
     render() {
@@ -120,6 +120,7 @@ const TabNavigator = createBottomTabNavigator(
     {
         Home: HomeStack,
         Camera : BadInstagramCloneApp,
+        // Camera : ProductScanRNCamera,
         Settings: SettingsStack,
     },
     {

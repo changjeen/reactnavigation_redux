@@ -20,17 +20,21 @@ class DetailScreen extends React.Component {
             id: id,
             detailData : props.list && id ? props.list[id-1] : [],
         }
+    }
 
-
+    getSnapshotBeforeUpdate(prevProps: Readonly<P>, prevState: Readonly<S>): SS | null {
+        if(prevProps.navigation.state.id !== this.props.navigation.state.id) {
+            this.setState({id : this.props.navigation.state.id});
+        }
     }
 
 
     render() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>{this.state.detailData.id } Details!</Text>
-                <Text>{this.state.detailData.title}</Text>
-                <Text>{this.state.detailData.description}</Text>
+                <Text>{this.state.id || 'default id'} Details!</Text>
+                {/*<Text>{this.state.detailData.title || 'default title' }</Text>*/}
+                {/*<Text>{this.state.detailData.description || 'default description' }</Text>*/}
                 <StatusBar barStyle="default" backgroundColor = "#00BCD4" />
             </View>
         );

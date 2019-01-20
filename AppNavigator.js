@@ -47,15 +47,17 @@ const HomeIconWithBadge = props => {
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
     const { routeName } = navigation.state;
-    const listCount = navigation.getParam('listCount', 0);
-    console.log(listCount);
+
 
     let IconComponent = Ionicons;
     let iconName;
     if (routeName === 'Home') {
         iconName = `ios-information-circle${focused ? '' : '-outline'}`;
         // We want to add badges to home tab icon
-        IconComponent = HomeIconWithBadge;
+        const listCount = navigation.getParam('listCount', -1);
+        console.log(listCount);
+        // IconComponent = HomeIconWithBadge;
+        return <IconComponent name={iconName} size={25} color={tintColor} badgeCount={listCount}/>;
     } else if (routeName === 'Settings') {
         // iconName = `ios-settings${focused ? '' : '-outline'}`;
         iconName = 'ios-settings';

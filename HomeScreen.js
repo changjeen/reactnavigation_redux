@@ -41,7 +41,8 @@ class HomeScreen extends React.Component {
             dataSource : nextProps.list,
         });
         if(this.props.list.length !== nextProps.list.length) {
-            this.props.navigation.setParams({listCount: nextProps.list.length || 0})
+            this.props.navigation.setParams({listCount: 9});
+            this.props.navigation.dangerouslyGetParent().setParams({listCount:9});
         }
     }
 

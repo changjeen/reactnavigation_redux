@@ -47,6 +47,9 @@ const HomeIconWithBadge = props => {
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
     const { routeName } = navigation.state;
+    const listCount = navigation.getParam('listCount', 0);
+    console.log(listCount);
+
     let IconComponent = Ionicons;
     let iconName;
     if (routeName === 'Home') {

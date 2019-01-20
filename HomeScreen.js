@@ -1,9 +1,10 @@
 import React from 'react';
-// import {View, Text, Button} from 'react-native';
-import {Container, Content, List, ListItem, Text} from "native-base";
+import {View, Text, Button, FlatList} from 'react-native';
+// import {Container, Content, List, ListItem, Text} from "native-base";
 import {bindActionCreators} from 'redux';
 import {getData} from "./src/actions/MainListAction";
 import {connect} from 'react-redux';
+import { ListItem } from "react-native-elements";
 
 class HomeScreen extends React.Component {
 
@@ -27,7 +28,11 @@ class HomeScreen extends React.Component {
         };
     };
 
-    componentWillMount(): void {
+    // componentWillMount(): void {
+    //     this.props.getData();
+    // }
+
+    componentDidMount(): void {
         this.props.getData();
     }
 
@@ -35,23 +40,33 @@ class HomeScreen extends React.Component {
         this.setState({
             dataSource : nextProps.list,
         });
+        if(this.props.list.length !== nextProps.list.length) {
+            this.props.navigation.setParams({listCount: nextProps.list.length || 0})
+        }
     }
 
-    renderRow(data) {
-        return (
-            <ListItem
-                onPress={() => this.props.navigation.navigate("Details", {
-                    id : data.id,
-                })}
-            >
-                <Text>{ data.title }</Text>
-            </ListItem>
-        )
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+        console.warn(error.message);
     }
+
+    renderRow = ({item}) =>
+        (
+            <ListItem
+                title = {item.title}
+                onPress={() => this.props.navigation.navigate("Details", {
+                    id : item.id,
+                })}
+            />
+
+        )
+
+
+    keyExtractor = (item, index) => index
 
     render() {
 
         return (
+            /*
             <Container>
                 <Content>
                     <List dataArray={this.state.dataSource}
@@ -61,6 +76,16 @@ class HomeScreen extends React.Component {
                     </List>
                 </Content>
             </Container>
+            */
+            <FlatList
+                keyExtractor={this.keyExtractor}
+                data={this.state.dataSource}
+                renderItem={
+                    this.renderRow
+                }
+
+
+            />
         );
     }
 }
@@ -74,5 +99,6 @@ const mapDispatchToProps = dispatch => (
         getData,
     },dispatch)
 );
+
 
 export default connect (mapStateToProps, mapDispatchToProps)(HomeScreen);

@@ -4,18 +4,35 @@ import HomeScreen from "./HomeScreen";
 import DetailScreen from "./DetailScreen";
 import SettingScreen from './SettingScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Text, View} from "react-native";
+import {Text, View, AsyncStorage} from "react-native";
 import {LoginScreen, AuthLoadingScreen} from './Login';
 import BadInstagramCloneApp from './BadInstagramCloneApp';
 import ProductScanRNCamera from './ProductScanRNCamera';
 
 class IconWithBadge extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            listCount : 0,
+        };
+
+        this._retrieveData = this._retrieveData.bind(this);
+
+    }
+
+    componentDidMount(): void {
+        // this._retrieveData;
+        AsyncStorage.getItem('badgeCount').then((value) => this.setState({ 'listCount': value }));
+    }
+
+
     render() {
         const { name, badgeCount, color, size } = this.props;
         return (
             <View style={{ width: 24, height: 24, margin: 5 }}>
                 <Ionicons name={name} size={size} color={color} />
-                {badgeCount > 0 && (
+                {this.state.listCount > 0 && (
                     <View
                         style={{
                             // /If you're using react-native < 0.57 overflow outside of the parent
@@ -31,12 +48,31 @@ class IconWithBadge extends React.Component {
                             alignItems: 'center',
                         }}>
                         <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
-                            {badgeCount}
+                            {this.state.listCount}
                         </Text>
                     </View>
                 )}
             </View>
         );
+    }
+
+    _retrieveData = async () => {
+
+        // let result = 0;
+
+        try {
+            const value = await AsyncStorage.getItem('unReadItemCount');
+            if (value !== null) {
+                // We have data!!
+                console.log(value);
+                this.setState({
+                    listCount : value,
+                });
+            }
+        } catch (error) {
+            // Error retrieving data
+            return 0;
+        }
     }
 }
 
@@ -45,19 +81,22 @@ const HomeIconWithBadge = props => {
     return <IconWithBadge {...props} badgeCount={3} />;
 };
 
+
 const getTabBarIcon = (navigation, focused, tintColor) => {
     const { routeName } = navigation.state;
 
 
     let IconComponent = Ionicons;
     let iconName;
+    let listCount;
     if (routeName === 'Home') {
         iconName = `ios-information-circle${focused ? '' : '-outline'}`;
         // We want to add badges to home tab icon
-        const listCount = navigation.getParam('listCount', -1);
-        console.log(listCount);
+        // listCount = navigation.getParam('listCount', -1);
+        // listCount = navigation.state.params;
+        // console.log(listCount);
         // IconComponent = HomeIconWithBadge;
-        return <IconComponent name={iconName} size={25} color={tintColor} badgeCount={listCount}/>;
+        return <IconWithBadge name={iconName} size={25} color={tintColor} badgeCount={listCount}/>;
     } else if (routeName === 'Settings') {
         // iconName = `ios-settings${focused ? '' : '-outline'}`;
         iconName = 'ios-settings';
@@ -68,6 +107,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     // You can return any component that you like here!
     return <IconComponent name={iconName} size={25} color={tintColor} />;
 };
+
+
 
 const HomeStack = createStackNavigator(
     {

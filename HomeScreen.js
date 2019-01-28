@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Button, FlatList} from 'react-native';
+import {View, Text, Button, FlatList, AsyncStorage,StyleSheet, TouchableOpacity} from 'react-native';
 // import {Container, Content, List, ListItem, Text} from "native-base";
 import {bindActionCreators} from 'redux';
 import {getData} from "./src/actions/MainListAction";
@@ -14,12 +14,11 @@ class HomeScreen extends React.Component {
         this.state ={
             dataSource: props.list || [],
         }
-
+        this._storeData = this._storeData.bind(this);
 
     }
 
     static navigationOptions = (navigation) => {
-
         return {
             headerTitle: 'Home',
             // headerLeft: (
@@ -34,6 +33,8 @@ class HomeScreen extends React.Component {
 
     componentDidMount(): void {
         this.props.getData();
+        // this._storeData;
+        AsyncStorage.setItem('badgeCount', '5');
     }
 
     componentWillReceiveProps(nextProps) {
@@ -41,8 +42,8 @@ class HomeScreen extends React.Component {
             dataSource : nextProps.list,
         });
         if(this.props.list.length !== nextProps.list.length) {
-            this.props.navigation.setParams({listCount: 9});
-            this.props.navigation.dangerouslyGetParent().setParams({listCount:9});
+            this.props.navigation.setParams({listCount: 8});
+            // this.props.navigation.dangerouslyGetParent().setParams({listCount:9});
         }
     }
 
@@ -50,6 +51,14 @@ class HomeScreen extends React.Component {
         console.warn(error.message);
     }
 
+    _storeData = async() => {
+        try{
+            await AsyncStorage.setItem('unReadItemCount', 5);
+        }catch (e) {
+            // Error saving data
+        }
+    }
+    /*
     renderRow = ({item}) =>
         (
             <ListItem
@@ -60,9 +69,24 @@ class HomeScreen extends React.Component {
             />
 
         )
+    */
+
+    renderRow = ({item}) =>
+        (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Details", {
+                id : item.id,
+            })}>
+                <View style={style.container}>
+                    <Text> {item.title}</Text>
+                    {/*<Text> {item.description}</Text>*/}
+                </View>
+            </TouchableOpacity>
+        )
 
 
-    keyExtractor = (item, index) => index
+    keyExtractor = (item, index) => index;
+
+    separator = () => <View style={style.separator}/>
 
     render() {
 
@@ -79,6 +103,7 @@ class HomeScreen extends React.Component {
             </Container>
             */
             <FlatList
+                ItemSeparatorComponent={this.separator}
                 keyExtractor={this.keyExtractor}
                 data={this.state.dataSource}
                 renderItem={
@@ -90,6 +115,19 @@ class HomeScreen extends React.Component {
         );
     }
 }
+
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding:12,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    separator: {
+        borderBottomColor: '#d1d0d4',
+        borderBottomWidth: 1
+    },
+})
 
 const mapStateToProps = state => ({
     list : state.list,

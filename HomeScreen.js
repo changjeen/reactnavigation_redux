@@ -15,15 +15,17 @@ class HomeScreen extends React.Component {
             dataSource: props.list || [],
         }
         this._storeData = this._storeData.bind(this);
-
     }
 
     static navigationOptions = (navigation) => {
+
         return {
             headerTitle: 'Home',
-            // headerLeft: (
-            //     <Button title="Info" onPress={()=> navigation.navigation.toggleDrawer()} color="#fff"/>
-            // ),
+            /*
+            headerLeft: (
+                <Button title="Info" onPress={()=> navigation.navigation.toggleDrawer()} color="#fff"/>
+            ),*/
+
         };
     };
 
@@ -88,6 +90,23 @@ class HomeScreen extends React.Component {
 
     separator = () => <View style={style.separator}/>
 
+    testMsg = () => {
+
+
+        // const redata = new URLSearchParams(formData);
+
+        fetch('http://192.168.0.4:443/testa',{
+            headers:{
+                Accept: 'application/json',
+                'Content-type' : 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({'seat_no': '2', 'floor': '6'})
+        });
+
+
+    };
+
 
     render() {
         let WebViewRef;
@@ -129,10 +148,11 @@ class HomeScreen extends React.Component {
                 >
                     <WebView
                         ref={WEBVIEW_REF => (WebViewRef = WEBVIEW_REF)}
-                        source={{uri: 'http://0.0.0.0:443/seatstatus'}}
+                        source={{uri: 'http://192.168.0.4:443/seatstatus'}}
                         javaScriptEnabled={true}
                         domStorageEnabled={true}
                     />
+                    <Button title='좌석예약' onPress={this.testMsg}/>
                 </ScrollView>
             </View>
 

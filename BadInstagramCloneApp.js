@@ -57,13 +57,46 @@ export default class BadInstagramCloneApp extends Component {
             return <View />;
         }
     }
+
+    _registerSeat = (seat_no, floor) => {
+
+
+        // const redata = new URLSearchParams(formData);
+
+        fetch('http://192.168.0.4:443/testa',{
+            headers:{
+                Accept: 'application/json',
+                'Content-type' : 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({'seat_no': seat_no, 'floor': floor})
+        });
+
+
+    };
+
     _onBarCodeRead = (e) => {
         // console.warn(e.type);
         // console.warn(e.data);
-        this.props.navigation.navigate("Details", {
-            id : e.data,
-        })
+        // this.props.navigation.navigate("Details", {
+        //     id : e.data,
+        // });
+
+        console.warn(e.data);
+
+        const obj = JSON.parse(e.data);
+        console.warn(obj.seat_no);
+        console.warn(obj.floor);
+
+        this._registerSeat(obj.seat_no.toString(), obj.floor.toString());
+
+        this.props.navigation.navigate("Home");
+
+
+
     }
+
+
 
     // takePicture = async function() {
     //     if (this.camera) {

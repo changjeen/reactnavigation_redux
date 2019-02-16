@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Button, FlatList, AsyncStorage,StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Button, FlatList, AsyncStorage,StyleSheet, TouchableOpacity, WebView, ScrollView, RefreshControl} from 'react-native';
 // import {Container, Content, List, ListItem, Text} from "native-base";
 import {bindActionCreators} from 'redux';
 import {getData} from "./src/actions/MainListAction";
@@ -88,7 +88,9 @@ class HomeScreen extends React.Component {
 
     separator = () => <View style={style.separator}/>
 
+
     render() {
+        let WebViewRef;
 
         return (
             /*
@@ -102,6 +104,7 @@ class HomeScreen extends React.Component {
                 </Content>
             </Container>
             */
+            /*
             <FlatList
                 ItemSeparatorComponent={this.separator}
                 keyExtractor={this.keyExtractor}
@@ -112,6 +115,28 @@ class HomeScreen extends React.Component {
 
 
             />
+            */
+
+            <View style={{flex: 1}}>
+                <ScrollView
+                    contentContainerStyle={{flex: 1}}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={WebViewRef && WebViewRef.reload()}
+                        />
+                    }
+                >
+                    <WebView
+                        ref={WEBVIEW_REF => (WebViewRef = WEBVIEW_REF)}
+                        source={{uri: 'http://0.0.0.0:443/seatstatus'}}
+                        javaScriptEnabled={true}
+                        domStorageEnabled={true}
+                    />
+                </ScrollView>
+            </View>
+
+
         );
     }
 }
